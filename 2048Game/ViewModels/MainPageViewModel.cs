@@ -60,7 +60,12 @@ namespace _2048Game.ViewModels
         public string AddedScore
         {
             get => addedScore;
-            set => SetProperty(ref addedScore, value);
+            set
+            {
+                //need to notify even for same value.
+                addedScore = value;
+                OnPropertyChanged(nameof(AddedScore));
+            }
         }
 
         public int GuessedCount
@@ -162,7 +167,10 @@ namespace _2048Game.ViewModels
                     }
                 }
             }
-            AddedScore = $"+ {iAdded}";
+            if (iAdded > 0)
+            {
+                AddedScore = $"+ {iAdded}";
+            }
             Score = iScore.ToString();
             BestScore = iBest.ToString();
             //See if Game Over
@@ -237,7 +245,7 @@ namespace _2048Game.ViewModels
             TotalMoves += 1;
             iNewX = -1;
             iNewY = -1;
-
+            iAdded = 0;
             Boolean bAdd = false;
 
             switch (nDirection)

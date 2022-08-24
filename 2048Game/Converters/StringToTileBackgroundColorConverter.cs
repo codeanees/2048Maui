@@ -24,19 +24,19 @@ namespace _2048Game.Converters
                 case 64:
                     return Color.FromArgb("#f76148");
                 case 128:
-                    return Color.FromArgb("#f76148");
+                    return Color.FromArgb("#EBD69A");
                 case 256:
-                    return Color.FromArgb("#f76148");
+                    return Color.FromArgb("#EBD69A");
                 case 512:
-                    return Color.FromArgb("#f76148");
+                    return Color.FromArgb("#EBD69A");
                 case 1024:
-                    return Color.FromArgb("#f76148");
+                    return Color.FromArgb("#EBD69A");
                 case 2048:
-                    return Color.FromArgb("#f76148");
+                    return Color.FromArgb("#EBD69A");
                 case 4096:
                 case 8192:
                 case 16384:
-                    return Color.FromArgb("#f76148");
+                    return Color.FromArgb("#EBD69A");
                 default:
                     return Color.FromArgb("#beafa0");
             }

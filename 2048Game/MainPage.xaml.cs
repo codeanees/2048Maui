@@ -15,6 +15,12 @@ public partial class MainPage : ContentPage
     double eTotalYStart = 0;
     private MainPageViewModel CurrentViewModel;
 
+    string[] phrases = new string[]
+    {
+        "I am thankful to the community",
+        "You can stop poking me and play some game",
+        "I am feeling sleepy now"
+    };
     public MainPage()
     {
         InitializeComponent();
@@ -154,7 +160,7 @@ public partial class MainPage : ContentPage
 
     async void UndoButton_Clicked(System.Object sender, System.EventArgs e)
     {
-        await Speak("Sorry, This feature is not supported yet!");
+        await Speak("Feature is not supported yet!!");
     }
 
     async void MauiRobotTapGestureRecognizer_Tapped(System.Object sender, System.EventArgs e)
