@@ -52,9 +52,6 @@ namespace _2048Game.Behaviors
             {
                 if (numberTile.IsNewNumberGenerated)
                 {
-                    //var bounceInAnimation = new MauiAnimation.BounceInAnimation { Duration = "200" };
-                    //await frame.Animate(bounceInAnimation);
-
                     var animation = new Animation();
 
                     animation.WithConcurrent(
@@ -68,32 +65,8 @@ namespace _2048Game.Behaviors
                             null,
                             0, 0.25);
                     frame.Animate("BounceIn", animation, 16, Convert.ToUInt32(200));
-
-                    //await frame.RotateXTo(90, 100, Easing.BounceIn);
-                    //frame.Content.IsVisible = numberTile.IsNewMatchGenerated;
-                    //await frame.RotateXTo(0, 100, Easing.BounceIn);
                 }
                 numberTile.IsNewNumberGenerated = false;
-            }
-            else if (e.PropertyName == nameof(NumberTile.IsNewMatchGenerated))
-            {
-                var animation = new Animation();
-
-                animation.Add(0.00, 0.20, new Animation(v => frame.Scale = v, 1.0, 0.9));
-                animation.Add(0.20, 0.75, new Animation(v => frame.Scale = v, 0.9, 1.2));
-                animation.Add(0.75, 1.00, new Animation(v => frame.Scale = v, 1.2, 0.0));
-
-                animation.Commit(
-                    frame,
-                    "SuccessfulMatch",
-                    length: 500,
-                    easing: Easing.SpringIn,
-                    finished: (v, f) =>
-                    {
-                        //frame.Parent.Effects.OfType<ParticleEffect>().First().RaiseEmit();
-
-                        frame.IsVisible = false;
-                    });
             }
         }
     }

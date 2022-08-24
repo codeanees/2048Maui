@@ -17,7 +17,7 @@ namespace _2048Game.ViewModels
     public partial class MainPageViewModel : BaseViewModel
     {
         private int[][] iBoard;
-        private int iScore = 0, iBest = 0;
+        private int iScore = 0, iBest = 0, iAdded = 0;
         private int addNum = 2;
         private Random oR = new Random();
         private Boolean gameOver = false;
@@ -43,16 +43,24 @@ namespace _2048Game.ViewModels
 
         private string score = "0";
         private string bestScore = "0";
+        private string addedScore = "0";
 
         public string Score
         {
             get => score;
             set => SetProperty(ref score, value);
         }
+
         public string BestScore
         {
             get => bestScore;
             set => SetProperty(ref bestScore, value);
+        }
+
+        public string AddedScore
+        {
+            get => addedScore;
+            set => SetProperty(ref addedScore, value);
         }
 
         public int GuessedCount
@@ -154,10 +162,11 @@ namespace _2048Game.ViewModels
                     }
                 }
             }
+            AddedScore = $"+ {iAdded}";
             Score = iScore.ToString();
             BestScore = iBest.ToString();
             //See if Game Over
-            if(checkGameOver())
+            if(IsGameOver())
             {
 
             }
@@ -248,6 +257,7 @@ namespace _2048Game.ViewModels
                                 {
                                     iBoard[i][j] *= 2;
                                     Tiles[i + j + GetAddOnIndex(i)].IsNumberMultiplied = true;
+                                    iAdded = iBoard[i][j];
                                     iScore += iBoard[i][j];
                                     iBoard[i][k] = 0;
                                     bAdd = true;
@@ -287,6 +297,7 @@ namespace _2048Game.ViewModels
                                 {
                                     iBoard[i][j] *= 2;
                                     Tiles[i + j + GetAddOnIndex(i)].IsNumberMultiplied = true;
+                                    iAdded = iBoard[i][j];
                                     iScore += iBoard[i][j];
                                     iBoard[k][j] = 0;
                                     bAdd = true;
@@ -326,6 +337,7 @@ namespace _2048Game.ViewModels
                                 {
                                     iBoard[i][j] *= 2;
                                     Tiles[i + j + GetAddOnIndex(i)].IsNumberMultiplied = true;
+                                    iAdded = iBoard[i][j];
                                     iScore += iBoard[i][j];
                                     iBoard[i][k] = 0;
                                     bAdd = true;
@@ -365,6 +377,7 @@ namespace _2048Game.ViewModels
                                 {
                                     iBoard[i][j] *= 2;
                                     Tiles[i + j + GetAddOnIndex(i)].IsNumberMultiplied = true;
+                                    iAdded = iBoard[i][j];
                                     iScore += iBoard[i][j];
                                     iBoard[k][j] = 0;
                                     bAdd = true;
@@ -401,15 +414,14 @@ namespace _2048Game.ViewModels
                 ++addNum;
             }
 
-            if (checkGameOver())
+            if (IsGameOver())
             {
-                //TODO: Update UI
                 State = LevelState.GameOver;
             }
             Update();
         }
 
-        public bool checkGameOver()
+        public bool IsGameOver()
         {
             for (int i = 0; i < 4; i++)
             {
@@ -470,7 +482,11 @@ namespace _2048Game.ViewModels
 
             this.addNum = 2;
             this.iScore = 0;
+            this.iAdded = 0;
             this.gameOver = false;
+            startTime = DateTime.Now;
+            TotalMoves = 0;
+            Score = "0";
         }
         private int GetAddOnIndex(int i)
         {

@@ -2,6 +2,7 @@
 using _2048Game.Data;
 using _2048Game.Enums;
 using _2048Game.ViewModels;
+using Microsoft.Maui.Controls;
 using SkiaSharp.Extended.UI.Controls;
 
 namespace _2048Game;
@@ -9,10 +10,15 @@ namespace _2048Game;
 public partial class MainPage : ContentPage
 {
     private bool canHitMauiRobot = true;
-	public MainPage()
+    private DateTime tappedDateTime = DateTime.MaxValue;
+    double eTotalXStart = 0;
+    double eTotalYStart = 0;
+    private MainPageViewModel CurrentViewModel;
+
+    public MainPage()
     {
         InitializeComponent();
-        DisplayConfettiAnimation();
+        CurrentViewModel = (MainPageViewModel)BindingContext;
     }
 
     private void DisplayConfettiAnimation()
@@ -32,10 +38,28 @@ public partial class MainPage : ContentPage
 
     void MainPageViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(MainPageViewModel.State) &&
-            ((MainPageViewModel)BindingContext).State == LevelState.GameOver)
+        var bindingContext = (MainPageViewModel)BindingContext;
+
+        if (e.PropertyName == nameof(MainPageViewModel.State))
         {
-            //TrophyAnimation.PlayAnimation();
+            if((bindingContext.State == LevelState.GameOver))
+            {
+                GameOverAnimation.IsAnimationEnabled = true;
+            }
+            else if((bindingContext.State == LevelState.Playing))
+            {
+                GameOverAnimation.IsAnimationEnabled = false;
+            }
+        }
+        else if(e.PropertyName == nameof(MainPageViewModel.AddedScore))
+        {
+            Device.BeginInvokeOnMainThread(async() =>
+            {
+                AddedScoreLabel.IsVisible = true;
+                await AddedScoreLabel.TranslateTo(0, -40, 500, Easing.Linear);
+                AddedScoreLabel.TranslateTo(0, 0, 0, Easing.Linear);
+                AddedScoreLabel.IsVisible = false;
+            });
         }
     }
     void OnSwiped(object sender, SwipedEventArgs e)
@@ -73,60 +97,12 @@ public partial class MainPage : ContentPage
                 break;
         }
     }
-    double eTotalXStart = 0;
-    double eTotalYStart = 0;
-
-    private int swipeThreshold = 20;
-    private int swipeVelocityThreshold = 100;
-
-    private int velocityX = 110;//In native android we have the way
-    private int velocityY = 110;//In native android we have the way
+  
 
     private void HandleTouchStart(double eTotalX, double eTotalY)
     {
         eTotalXStart = eTotalX;
         eTotalYStart = eTotalY;
-    }
-    private void HandleTouchEndNew(double eTotalXEnd, double eTotalYEnd)
-    {
-        var currentViewModel = (MainPageViewModel)BindingContext;
-        try
-        {
-            var diffY = eTotalYEnd - eTotalYStart;
-            var diffX = eTotalXEnd - eTotalXStart;
-            if (Math.Abs(diffX) > Math.Abs(diffY))
-            {
-                if (Math.Abs(diffX) > swipeThreshold && Math.Abs(velocityX) > swipeVelocityThreshold)
-                {
-                    if (diffX > 0)
-                    {
-                        Debug.WriteLine("Left to Right swipe gesture");
-                        currentViewModel.LeftSwipeCommand.Execute(null);
-                    }
-                    else
-                    {
-                        Debug.WriteLine("Right to Left swipe gesture");
-                        currentViewModel.RightSwipeCommand.Execute(null);
-                    }
-                }
-            }
-            else if (Math.Abs(diffY) > swipeThreshold && Math.Abs(velocityY) > swipeVelocityThreshold)
-            {
-                if (diffY > 0)
-                {
-                    Debug.WriteLine("Top to Botton swipe gesture");
-                    currentViewModel.DownSwipeCommand.Execute(null);
-                }
-                else
-                {
-                    Debug.WriteLine("Bottom to Top swipe gesture");
-                    currentViewModel.UpSwipeCommand.Execute(null);
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-        }
     }
     private void HandleTouch(double eTotalX, double eTotalY)
     {
@@ -170,30 +146,42 @@ public partial class MainPage : ContentPage
                 break;
             case SwipeDirection.Down:
                 currentViewModel.DownSwipeCommand.Execute(null);
-
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
     }
 
-    void UndoButton_Clicked(System.Object sender, System.EventArgs e)
+    async void UndoButton_Clicked(System.Object sender, System.EventArgs e)
     {
-        DisplayConfettiAnimation();
+        await Speak("Sorry, This feature is not supported yet!");
     }
+
     async void MauiRobotTapGestureRecognizer_Tapped(System.Object sender, System.EventArgs e)
     {
+        await Speak("Hey I am MauiRobot!");
+    }
+
+    private async Task Speak(string phrase)
+    {
+        //Prevent multiple Taps before the animation gets completed.
         if (canHitMauiRobot)
         {
             canHitMauiRobot = false;
             HapticFeedback.Default.Perform(HapticFeedbackType.Click);
+            CurrentViewModel.MauiRobotPhrase = phrase;
             phraseLayout.IsVisible = true;
-            //Translate effect  
             await phraseLayout.TranslateTo(10, 30, 1000, Easing.CubicOut);
             await phraseLayout.TranslateTo(0, 0, 1000, Easing.CubicIn);
             phraseLayout.IsVisible = false;
             canHitMauiRobot = true;
+            tappedDateTime = DateTime.Now;
         }
+    }
+
+    void GameLabelTapGestureRecognizer_Tapped(System.Object sender, System.EventArgs e)
+    {
+        DisplayConfettiAnimation();
     }
 }
 

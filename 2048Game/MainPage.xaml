@@ -26,8 +26,8 @@
             </toolkit:EnumToBoolConverter.TrueValues>
         </toolkit:EnumToBoolConverter>
         <Style x:Key="NumberTileFrame" TargetType="Frame">
-            <Setter Property="HeightRequest" Value="75" />
-            <Setter Property="WidthRequest" Value="75" />
+            <Setter Property="HeightRequest" Value="70" />
+            <Setter Property="WidthRequest" Value="70" />
             <Setter Property="CornerRadius" Value="5" />
         </Style>
         <Style x:Key="NumberTileGrid" TargetType="Grid">
@@ -53,14 +53,22 @@
                     HorizontalTextAlignment="Center"
                     Text="2048"
                     TextColor="White"
-                    VerticalTextAlignment="Center" />
+                    VerticalTextAlignment="Center" >
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="GameLabelTapGestureRecognizer_Tapped"/>
+                    </Label.GestureRecognizers>
+                </Label>
+
                 <VerticalStackLayout
                     Grid.Row="0"
                     Grid.Column="1"
                     Padding="10"
                     BackgroundColor="Gray">
                     <Label Style="{StaticResource WhiteLabelStyle}" Text="Score" />
-                    <Label Style="{StaticResource WhiteLabelStyle}" Text="{Binding Score}" />
+                    <Grid>
+                        <Label Style="{StaticResource WhiteLabelStyle}" Text="{Binding Score}" />
+                        <Label x:Name="AddedScoreLabel" IsVisible="True" Style="{StaticResource WhiteLabelStyle}" Text="{Binding AddedScore}" />
+                    </Grid>
                 </VerticalStackLayout>
                 <VerticalStackLayout
                     Grid.Row="0"
@@ -89,7 +97,7 @@
                 <Label
                     Grid.Row="2"
                     Grid.ColumnSpan="3"
-                    FontSize="16"
+                    FontSize="14"
                     HorizontalTextAlignment="Center"
                     Text="Join the numbers and get to the 2048 tile!"
                     TextColor="Gray" />
@@ -105,7 +113,7 @@
                     HeightRequest="336"
                     WidthRequest="340"
                     BackgroundColor="#a49381"
-                    VerticalOptions="FillAndExpand"
+                    VerticalOptions="CenterAndExpand"
                     ItemsSource="{Binding Tiles}">
                     <CollectionView.ItemsLayout>
                         <GridItemsLayout
@@ -117,13 +125,6 @@
                                 x:Name="MyToolsPhotosItem"
                                 Margin="4"
                                 Style="{StaticResource NumberTileGrid}">
-                                <!--<Grid.Effects>
-                                <effects:ParticleEffect Image="star"
-                                                    NumberOfParticles="40"
-                                                    LifeTime="0.3"
-                                                    Scale="0.5"
-                                                    Speed="0.3" />
-                            </Grid.Effects>-->
                                 <Frame
                                     x:Name="tttt"
                                     Padding="0"
@@ -135,8 +136,10 @@
                                         <behaviors:TileStateBehavior />
                                     </Frame.Behaviors>
                                     <Label
-                                        FontFamily="OpenSansBold"
+                                        FontFamily="PoppinsBold"
                                         FontSize="36"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="Center"
                                         HorizontalTextAlignment="Center"
                                         Text="{Binding Number}"
                                         TextColor="{Binding Number, Converter={StaticResource StringToTileTextColorConverter}}"
@@ -165,21 +168,6 @@
                 <Label HorizontalOptions="End" HorizontalTextAlignment="End" Text="{Binding FormattedTime}" FontSize="16" TextColor="Gray"/>
             </Grid>
             <Grid Grid.Row="3" VerticalOptions="End" Margin="0,0,0,70" ColumnDefinitions="Auto, Auto, Auto">
-                  <!--<Image
-                        HeightRequest="150"
-                        WidthRequest="150"
-                        Opacity="0.5"
-                        HorizontalOptions="Start"
-                        SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                        Source="dotnet_bot.png"
-                        VerticalOptions="End" >
-                      <Image.Shadow>
-                            <Shadow Brush="Black"
-                                    Offset="20,20"
-                                    Radius="40"
-                                    Opacity="0.8" />
-                        </Image.Shadow>
-                      </Image>-->
                     <skia:SKLottieView
                         HeightRequest="150"
                         HorizontalOptions="Start"
@@ -213,7 +201,7 @@
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="10" />
                                 </Border.StrokeShape>
-                             <Label Text="{Binding MauiRobotPhrase}" FontSize="15"/>
+                             <Label TextColor="White" Text="{Binding MauiRobotPhrase}" FontSize="15"/>
                              </Border>
                     </HorizontalStackLayout>
                     <Grid Grid.Column="2" IsVisible="False">
@@ -311,8 +299,10 @@
                HasShadow="False">
             <Grid>
                 <skia:SKLottieView HeightRequest="150"
+                        x:Name="GameOverAnimation"
                         HorizontalOptions="FillAndExpand"
                         RepeatCount="-1"
+                        IsAnimationEnabled="False"
                         SemanticProperties.Description="Cute dot net bot waving hi to you!"
                         Source="gameoveranimate.json"
                         VerticalOptions="FillAndExpand"/>
