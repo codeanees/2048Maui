@@ -119,7 +119,6 @@ namespace _2048Game.ViewModels
         {
             MoveBoard(Direction.Down);
             UpdateGame();
-            State = LevelState.GameOver;
         }
         [RelayCommand]
         void NewGame()
