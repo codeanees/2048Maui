@@ -37,7 +37,7 @@ public partial class MainPage : ContentPage
             MinimumInitialVelocity = 30,
             MaximumInitialVelocity = 150,
             Emitter = SKConfettiEmitter.Burst(100),
-            EmitterBounds = SKConfettiEmitterBounds.Center,
+            EmitterBounds = SKConfettiEmitterBounds.Top,
         };
         skConfetti.Systems.Add(sus);
     }
