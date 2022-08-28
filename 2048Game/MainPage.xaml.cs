@@ -25,6 +25,7 @@ public partial class MainPage : ContentPage
     {
         InitializeComponent();
         CurrentViewModel = (MainPageViewModel)BindingContext;
+        skConfetti.Systems.Clear();
     }
 
     private void DisplayConfettiAnimation()
